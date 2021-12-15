@@ -2,7 +2,7 @@ import argparse
 import json
 from io import TextIOWrapper
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
 class LogEntryReader:
@@ -12,7 +12,7 @@ class LogEntryReader:
     def __init__(self, source: TextIOWrapper) -> None:
         self._source = source
 
-    def readline(self):
+    def readline(self) -> str:
         self._line = self._source.readline()
         # Recalculate timestamp if possible
         if self._line:
@@ -22,15 +22,15 @@ class LogEntryReader:
         return self._line
 
     @property
-    def line(self):
+    def line(self) -> str:
         return self._line
 
     @property
-    def timestamp(self):
+    def timestamp(self) -> Optional[str]:
         return self._timestamp
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Log merge tool")
 
     parser.add_argument(
@@ -57,7 +57,7 @@ def verify_files(inputs: List[Path], output: Path) -> None:
         raise FileExistsError("Log file {output} already exists")
 
 
-def make_subdirectories(output: Path):
+def make_subdirectories(output: Path) -> None:
     subdir = output.parent
     subdir.mkdir(parents=True)
 
